@@ -10,7 +10,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
   name: 'myVMSS'
   location: location
   sku: {
-    name: 'Standard_DS1_v2'
+    name: 'Standard_b1ms'
     tier: 'Standard'
     capacity: 1
   }
@@ -32,8 +32,6 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
         adminUsername: adminUsername
         adminPassword: adminPassword
         linuxConfiguration: null
-        allowExtensionOperations: true
-        requireGuestProvisionSignal: true
       }
       storageProfile: {
         imageReference: {
