@@ -59,7 +59,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   }
 }
 
-resource bastionNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
+resource bastionNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
   name: 'bastionNSG'
   location: location
   properties: {
@@ -81,7 +81,7 @@ resource bastionNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
   }
 }
 
-resource appNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
+resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
   name: 'appNSG'
   location: location
   properties: {
@@ -94,7 +94,7 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
           direction: 'Inbound'
           protocol: '*'
           sourcePortRange: '*'
-          destinationPortRange: '80,3000,4000'
+          destinationPortRange: ['80','3000','4000']
           sourceAddressPrefix: '*'
           destinationAddressPrefix: '*'
         }
@@ -103,7 +103,7 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
   }
 }
 
-resource webNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
+resource webNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
   name: 'webNSG'
   location: location
   properties: {
@@ -116,7 +116,7 @@ resource webNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
           direction: 'Inbound'
           protocol: '*'
           sourcePortRange: '*'
-          destinationPortRange: '80,22'
+          destinationPortRange: ['80','22']
           sourceAddressPrefix: '*'
           destinationAddressPrefix: '*'
         }
