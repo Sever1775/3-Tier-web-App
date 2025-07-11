@@ -17,6 +17,12 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
     upgradePolicy: {
       mode: 'Manual'
     }
+    scaleInPolicy: {
+      rules: [
+    'Default'
+      ]
+      forceDeletion: false
+    }
     virtualMachineProfile: {
       osProfile: {
         computerNamePrefix: 'vmss'
@@ -49,10 +55,17 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
             name: 'vmssNicConfig'
             properties: {
               primary: true
+              enableAcceleratedNetworking: false
+              disableTcpStateTracking: false
+              dnsSettings: {
+                dnsServers: []
+              }
+              enableIPForwarding: false
               ipConfigurations: [
                 {
                   name: 'vmssIpConfig'
                   properties: {
+                    primary: true
                     subnet: {
                       id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'AppSubnet')
                     }
@@ -68,6 +81,13 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
           }
         ]
       }
+      diagnosticsProfile: {
+        bootDiagnostics: {
+          enabled: false        }
+      }
     }
+    overprovision: false
+    platformFaultDomainCount: 1
   }
 }
+
