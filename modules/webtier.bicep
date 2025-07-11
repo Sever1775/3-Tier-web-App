@@ -28,7 +28,6 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
         computerNamePrefix: 'vmss'
         adminUsername: adminUsername
         adminPassword: adminPassword
-        secrets: []
         allowExtensionOperations: true
         requireGuestProvisionSignal: true
       }
