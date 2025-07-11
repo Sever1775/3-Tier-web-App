@@ -109,7 +109,7 @@ resource webNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
   properties: {
     securityRules: [
       {
-        name: 'AllowWebInbound'
+        name: 'Allowport80Inbound'
         properties: {
           priority: 100
           access: 'Allow'
@@ -121,6 +121,19 @@ resource webNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           destinationAddressPrefix: '*'
         }
       }
+      {
+        name: 'Allowport22Inbound'
+        properties: {
+          priority: 110
+          access: 'Allow'
+          direction: 'Inbound'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '22'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
     ]
   }
-}
+} 
