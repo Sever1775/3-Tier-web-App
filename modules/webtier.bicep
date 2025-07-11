@@ -27,10 +27,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
       osProfile: {
         computerNamePrefix: 'vmss'
         adminUsername: adminUsername
-        linuxConfiguration: {
-          disablePasswordAuthentication: false
-          provisionVMAgent: true
-        }
+        adminPassword: adminPassword
         secrets: []
         allowExtensionOperations: true
         requireGuestProvisionSignal: true
@@ -52,9 +49,6 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
           diskSizeGB: 30
         }
         diskControllerType: 'SCSI'
-      }
-      securityProfile: {
-        securityType: 'TrustedLaunch'
       }
       networkProfile: {
         networkInterfaceConfigurations: [
