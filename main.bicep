@@ -13,8 +13,13 @@ module appgwModule 'modules/appgw.bicep' = {
   name: 'deployappgateway'
   params: {
     location: location
-    adminPassword : adminPassword
   }
 }
 
-
+module webtierModule 'modules/webtier.bicep' = {
+  name: 'deploywebtier'
+  params: {
+    location: location
+    adminPassword : adminPassword
+  }
+}

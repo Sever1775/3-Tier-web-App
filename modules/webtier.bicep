@@ -12,7 +12,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
   sku: {
     name: 'Standard_DS1_v2'
     tier: 'Standard'
-    capacity: 2
+    capacity: 1
   }
   properties: {
     singlePlacementGroup: false
@@ -86,7 +86,6 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
       }
     }
     overprovision: false
-    platformFaultDomainCount: 2
   }
 }
 
