@@ -1,4 +1,4 @@
-param location string
+param location string 
 
 resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
   name: 'myAppGateway'
@@ -41,9 +41,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
       {
         name: 'appGatewayBackendPool'
         properties: {
-          backendAddresses: [
-            {ipAddress: '10.0.5.1'}
-          ]
+          backendAddresses: []
         }
       }
     ]
@@ -89,6 +87,14 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
         }
       }
     ]
+    routingRules: []
+    enableHttp2: true
+    sslCertificates: []
+    probes: []
+    autoscaleConfiguration: {
+      minCapacity: 1
+      maxCapacity: 5
+    }
   }
 }
 
