@@ -12,8 +12,10 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
     capacity: 2
   }
   properties: {
+    singlePlacementGroup: false
+    orchestrationMode: 'Uniform'
     upgradePolicy: {
-      mode: 'Automatic'
+      mode: 'Manual'
     }
     virtualMachineProfile: {
       osProfile: {
@@ -33,6 +35,9 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
           caching: 'ReadWrite'
         }
       }
+      securityProfile: {
+        securityType: 'TrustedLaunch'
+      }
       networkProfile: {
         networkInterfaceConfigurations: [
           {
@@ -48,7 +53,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
                     }
                     loadBalancerBackendAddressPools: [
                       {
-                        
+                        id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', 'myAppGateway', 'appGatewayBackendPool')
                       }
                     ]
                   }
