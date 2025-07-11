@@ -3,18 +3,17 @@ param location string
 resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
   name: 'myAppGateway'
   location: location
-  
-  properties: {
-    enableHttp2: true
-    sslCertificates: []
-    probes: []
-    autoscaleConfiguration: {
-      minCapacity: 1
-      maxCapacity: 5
-    }    
-    sku: {
+  zones: [
+    '1'
+    '2'
+    '3'
+  ]
+    properties: {
+     sku: {
       name: 'Standard_v2'
       tier: 'Standard_v2'
+      family: 'Generation_1'
+      capacity: 2 
     }
     gatewayIPConfigurations: [
       {
@@ -26,10 +25,15 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
         }
       }
     ]
+    sslCertificates: []
+    trustedRootCertificates: []
+    trustedClientCertificates: []
+    sslProfiles: []
     frontendIPConfigurations: [
       {
         name: 'appGatewayFrontendIP'
         properties: {
+          privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
             id: appGatewayPublicIP.id
           }
@@ -52,6 +56,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
         }
       }
     ]
+    loadDistributionPolicies: []
     backendHttpSettingsCollection: [
       {
         name: 'appGatewayBackendHttpSettings'
@@ -59,14 +64,16 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
           port: 80
           protocol: 'Http'
           cookieBasedAffinity: 'Disabled'
+          pickHostNameFromBackendAddress: false
           requestTimeout: 20
         }
       }
     ]
+    backendSettingsCollection: []
     httpListeners: [
       {
         name: 'appGatewayHttpListener'
-        properties: {
+        properties: { 
           frontendIPConfiguration: {
             id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', 'myAppGateway', 'appGatewayFrontendIP')
           }
@@ -74,14 +81,20 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
             id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', 'myAppGateway', 'appGatewayFrontendPort')
           }
           protocol: 'Http'
+          hostNames: []
+          requireServerNameIndication: false
+          customErrorConfigurations: []
         }
       }
     ]
+    listeners: []
+    urlPathMaps: []
     requestRoutingRules: [
       {
         name: 'appGatewayRoutingRule'
         properties: {
           ruleType: 'Basic'
+          priority: 100
           httpListener: {
             id: resourceId('Microsoft.Network/applicationGateways/httpListeners', 'myAppGateway', 'appGatewayHttpListener')
           }
@@ -94,6 +107,12 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
         }
       }
     ]
+    routingRules: []
+    probes: []
+    rewriteRuleSets: []
+    redirectConfigurations: []
+    privateLinkConfigurations: []
+    enableHttp2: true
   }
 }
 
