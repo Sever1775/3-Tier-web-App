@@ -10,7 +10,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
   name: 'myVMSS'
   location: location
   sku: {
-    name: 'Standard_b1ms'
+    name: 'Standard_d2s_v3'
     tier: 'Standard'
     capacity: 1
   }
