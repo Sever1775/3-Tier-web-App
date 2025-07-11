@@ -99,10 +99,10 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           destinationAddressPrefix: '*'
         }
       }
-            {
+      {
         name: 'Allowport3000Inbound'
         properties: {
-          priority: 100
+          priority: 110
           access: 'Allow'
           direction: 'Inbound'
           protocol: '*'
@@ -112,10 +112,10 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           destinationAddressPrefix: '*'
         }
       }
-            {
+      {
         name: 'Allowport4000Inbound'
         properties: {
-          priority: 100
+          priority: 120
           access: 'Allow'
           direction: 'Inbound'
           protocol: '*'
