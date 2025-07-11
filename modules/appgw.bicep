@@ -3,11 +3,6 @@ param location string
 resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
   name: 'myAppGateway'
   location: location
-  zones: [
-    '1'
-    '2'
-    '3'
-  ]
     properties: {
      sku: {
       name: 'Standard_v2'
