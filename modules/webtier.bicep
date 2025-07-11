@@ -31,8 +31,13 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
           version: 'latest'
         }
         osDisk: {
+          osType: 'Linux'
           createOption: 'FromImage'
           caching: 'ReadWrite'
+          managedDisk: {
+            storageAccountType: 'Standard_LRS'
+          }
+          diskSizeGB: 30
         }
       }
       securityProfile: {
