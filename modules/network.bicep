@@ -1,6 +1,6 @@
 param location string
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   name: 'myVNet'
   location: location
   properties: {
