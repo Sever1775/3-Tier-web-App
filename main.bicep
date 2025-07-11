@@ -1,6 +1,6 @@
 param location string = resourceGroup().location
 @secure()
-param adminPasswordOrKey string
+param adminPassword string
 
 module networkModule 'modules/network.bicep' = {
   name: 'deploynetworks'
@@ -20,6 +20,6 @@ module webtierModule 'modules/webtier.bicep' = {
   name: 'deploywebtier'
   params: {
     location: location
-    adminPasswordOrKey: adminPasswordOrKey
+    adminPassword : adminPassword
   }
 }
