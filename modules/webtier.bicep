@@ -27,11 +27,17 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
       osProfile: {
         computerNamePrefix: 'vmss'
         adminUsername: adminUsername
-        adminPassword: adminPassword
+        linuxConfiguration: {
+          disablePasswordAuthentication: false
+          provisionVMAgent: true
+        }
+        secrets: []
+        allowExtensionOperations: true
+        requireGuestProvisionSignal: true
       }
       storageProfile: {
         imageReference: {
-          publisher: 'Canonical'
+          publisher: 'canonical'
           offer: '0001-com-ubuntu-server-jammy'
           sku: '22_04-lts-gen2'
           version: 'latest'
@@ -41,10 +47,11 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
           createOption: 'FromImage'
           caching: 'ReadWrite'
           managedDisk: {
-            storageAccountType: 'Standard_LRS'
+            storageAccountType: 'Premium_LRS'
           }
           diskSizeGB: 30
         }
+        diskControllerType: 'SCSI'
       }
       securityProfile: {
         securityType: 'TrustedLaunch'
