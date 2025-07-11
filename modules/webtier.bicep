@@ -1,7 +1,21 @@
 param location string
 param adminUsername string = 'azureuser'
+
+param authenticationType string = 'password'
 @secure()
-param adminPassword string
+param adminPasswordOrKey string
+
+var linuxConfiguration = {
+  disablePasswordAuthentication: true
+  ssh: {
+    publicKeys: [
+      {
+        path: '/home/${adminUsername}/.ssh/authorized_keys'
+        keyData: adminPasswordOrKey
+      }
+    ]
+  }
+}
 
 resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
   name: 'myVMSS'
@@ -27,7 +41,8 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
       osProfile: {
         computerNamePrefix: 'vmss'
         adminUsername: adminUsername
-        adminPassword: adminPassword
+        adminPassword: adminPasswordOrKey
+        linuxConfiguration: ((authenticationType == 'password') ? 'null' : linuxConfiguration)
         allowExtensionOperations: true
         requireGuestProvisionSignal: true
       }
