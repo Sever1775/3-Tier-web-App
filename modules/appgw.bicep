@@ -41,7 +41,9 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
       {
         name: 'appGatewayBackendPool'
         properties: {
-          backendAddresses: []
+          backendAddresses: [
+            {ipAddress: '10.0.5.1'}
+          ]
         }
       }
     ]
