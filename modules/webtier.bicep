@@ -70,11 +70,6 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
                     subnet: {
                       id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'AppSubnet')
                     }
-                    loadBalancerBackendAddressPools: [
-                      {
-                        id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', 'myAppGateway', 'appGatewayBackendPool')
-                      }
-                    ]
                   }
                 }
               ]
