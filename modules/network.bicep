@@ -1,11 +1,7 @@
-param location string 
-
-var virtualNetworkName = 'my-vnet'
-var subnet1Name = 'Subnet-1'
-var subnet2Name = 'Subnet-2'
+param location string
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
-  name: virtualNetworkName
+  name: 'myVNet'
   location: location
   properties: {
     addressSpace: {
@@ -13,18 +9,118 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
         '10.0.0.0/16'
       ]
     }
+    subnets: [
+      {
+        name: 'Default'
+        properties: {
+          addressPrefix: '10.0.0.0/24'
+        }
+      }
+      {
+        name: 'BastionSubnet'
+        properties: {
+          addressPrefix: '10.0.1.0/24'
+          networkSecurityGroup: {
+            id: resourceId('Microsoft.Network/networkSecurityGroups', 'bastionNSG')
+          }
+        }
+      }
+      {
+        name: 'GatewaySubnet'
+        properties: {
+          addressPrefix: '10.0.2.0/24'
+        }
+      }
+      {
+        name: 'DatabaseSubnet'
+        properties: {
+          addressPrefix: '10.0.3.0/24'
+        }
+      }
+      {
+        name: 'AppSubnet'
+        properties: {
+          addressPrefix: '10.0.4.0/24'
+          networkSecurityGroup: {
+            id: resourceId('Microsoft.Network/networkSecurityGroups', 'appNSG')
+          }
+        }
+      }
+      {
+        name: 'WebSubnet'
+        properties: {
+          addressPrefix: '10.0.5.0/24'
+          networkSecurityGroup: {
+            id: resourceId('Microsoft.Network/networkSecurityGroups', 'webNSG')
+          }
+        }
+      }
+    ]
   }
+}
 
-  resource subnet1 'subnets' = {
-    name: subnet1Name
-    properties: {
-      addressPrefix: '10.0.0.0/24'
-    }  }
+resource bastionNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
+  name: 'bastionNSG'
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'AllowBastionInbound'
+        properties: {
+          priority: 100
+          access: 'Allow'
+          direction: 'Inbound'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '22'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
+    ]
+  }
+}
 
-  resource subnet2 'subnets' = {
-    name: subnet2Name
-    properties: {
-      addressPrefix: '10.0.1.0/24'
-    }    
+resource appNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
+  name: 'appNSG'
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'AllowAppInbound'
+        properties: {
+          priority: 100
+          access: 'Allow'
+          direction: 'Inbound'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '80,3000,4000'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
+    ]
+  }
+}
+
+resource webNSG 'Microsoft.Network/networkSecurityGroups@2020-06-01' = {
+  name: 'webNSG'
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'AllowWebInbound'
+        properties: {
+          priority: 100
+          access: 'Allow'
+          direction: 'Inbound'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '80,22'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
+    ]
   }
 }
