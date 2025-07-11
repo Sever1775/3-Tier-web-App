@@ -99,6 +99,32 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           destinationAddressPrefix: '*'
         }
       }
+            {
+        name: 'AllowAppInbound'
+        properties: {
+          priority: 100
+          access: 'Allow'
+          direction: 'Inbound'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '3000'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
+            {
+        name: 'AllowAppInbound'
+        properties: {
+          priority: 100
+          access: 'Allow'
+          direction: 'Inbound'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '4000'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
     ]
   }
 }
