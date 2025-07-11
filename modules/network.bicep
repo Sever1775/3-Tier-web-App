@@ -87,7 +87,7 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
   properties: {
     securityRules: [
       {
-        name: 'AllowAppInbound'
+        name: 'Allowport80Inbound'
         properties: {
           priority: 100
           access: 'Allow'
@@ -100,7 +100,7 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
         }
       }
             {
-        name: 'AllowAppInbound'
+        name: 'Allowport3000Inbound'
         properties: {
           priority: 100
           access: 'Allow'
@@ -113,7 +113,7 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
         }
       }
             {
-        name: 'AllowAppInbound'
+        name: 'Allowport4000Inbound'
         properties: {
           priority: 100
           access: 'Allow'
