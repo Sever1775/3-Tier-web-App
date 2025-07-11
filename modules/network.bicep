@@ -94,7 +94,7 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           direction: 'Inbound'
           protocol: '*'
           sourcePortRange: '*'
-          destinationPortRange: ['80','3000','4000']
+          destinationPortRange: '80'
           sourceAddressPrefix: '*'
           destinationAddressPrefix: '*'
         }
@@ -116,7 +116,7 @@ resource webNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           direction: 'Inbound'
           protocol: '*'
           sourcePortRange: '*'
-          destinationPortRange: ['80','22']
+          destinationPortRange: '80'
           sourceAddressPrefix: '*'
           destinationAddressPrefix: '*'
         }
