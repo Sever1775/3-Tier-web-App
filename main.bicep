@@ -8,7 +8,7 @@ module networkModule 'modules/network.bicep' = {
   }
 }
 
-module appGatewayModule 'modules/appgw.bicep' = {
+module appgwModule 'modules/appgw.bicep' = {
   name: 'deployappgateway'
   params: {
     location: location

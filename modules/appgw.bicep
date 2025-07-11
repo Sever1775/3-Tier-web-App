@@ -3,18 +3,25 @@ param location string
 resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
   name: 'myAppGateway'
   location: location
+  
   properties: {
+    enableHttp2: true
+    sslCertificates: []
+    probes: []
+    autoscaleConfiguration: {
+      minCapacity: 1
+      maxCapacity: 5
+    }    
     sku: {
       name: 'Standard_v2'
       tier: 'Standard_v2'
-      capacity: 1
     }
     gatewayIPConfigurations: [
       {
         name: 'appGatewayIpConfig'
         properties: {
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'GatewaySubnet')
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'AppGatewaySubnet')
           }
         }
       }
@@ -24,7 +31,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
         name: 'appGatewayFrontendIP'
         properties: {
           publicIPAddress: {
-            id: resourceId('Microsoft.Network/publicIPAddresses', 'myPublicIP')
+            id: appGatewayPublicIP.id
           }
         }
       }
@@ -87,14 +94,6 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
         }
       }
     ]
-    routingRules: []
-    enableHttp2: true
-    sslCertificates: []
-    probes: []
-    autoscaleConfiguration: {
-      minCapacity: 1
-      maxCapacity: 5
-    }
   }
 }
 
