@@ -14,7 +14,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
         name: 'appGatewayIpConfig'
         properties: {
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'AppGatewaySubnet')
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'GatewaySubnet')
           }
         }
       }
