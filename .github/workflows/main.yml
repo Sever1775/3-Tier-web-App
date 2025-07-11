@@ -19,5 +19,4 @@ jobs:
       with:
         resourceGroupName: 3tierwebapp
         template: ./main.bicep # Path to your Bicep file
-        parameters: |
-          adminPassword=${{ secrets.ADMIN_PASSWORD }}
+
