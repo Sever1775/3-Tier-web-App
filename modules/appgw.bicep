@@ -81,6 +81,9 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
           backendAddressPool: {
             id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', 'myAppGateway', 'appGatewayBackendPool')
           }
+          backendHttpSettings: {
+            id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', 'myAppGateway', 'appGatewayBackendHttpSettings')
+          }
         }
       }
     ]
