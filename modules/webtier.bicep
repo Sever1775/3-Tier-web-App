@@ -1,0 +1,63 @@
+param location string
+param adminUsername string = 'azureuser'
+@secure()
+param adminPassword string
+
+resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
+  name: 'myVMSS'
+  location: location
+  sku: {
+    name: 'Standard_DS1_v2'
+    tier: 'Standard'
+    capacity: 2
+  }
+  properties: {
+    upgradePolicy: {
+      mode: 'Automatic'
+    }
+    virtualMachineProfile: {
+      osProfile: {
+        computerNamePrefix: 'vmss'
+        adminUsername: adminUsername
+        adminPassword: adminPassword
+      }
+      storageProfile: {
+        imageReference: {
+          publisher: 'Canonical'
+          offer: '0001-com-ubuntu-server-jammy'
+          sku: '22_04-lts-gen2'
+          version: 'latest'
+        }
+        osDisk: {
+          createOption: 'FromImage'
+          caching: 'ReadWrite'
+        }
+      }
+      networkProfile: {
+        networkInterfaceConfigurations: [
+          {
+            name: 'vmssNicConfig'
+            properties: {
+              primary: true
+              ipConfigurations: [
+                {
+                  name: 'vmssIpConfig'
+                  properties: {
+                    subnet: {
+                      id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'AppSubnet')
+                    }
+                    loadBalancerBackendAddressPools: [
+                      {
+                        id: resourceId('Microsoft.Network/loadBalancers/backendAddressPools', 'myAppGateway', 'appGatewayBackendPool')
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

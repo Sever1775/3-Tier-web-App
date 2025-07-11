@@ -7,14 +7,14 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
     sku: {
       name: 'Standard_v2'
       tier: 'Standard_v2'
-      capacity: 2
+      capacity: 1
     }
     gatewayIPConfigurations: [
       {
         name: 'appGatewayIpConfig'
         properties: {
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'GatewaySubnet')
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'AppGatewaySubnet')
           }
         }
       }
@@ -41,11 +41,18 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
       {
         name: 'appGatewayBackendPool'
         properties: {
-          backendAddresses: [
-            {
-              fqdn: 'myapp.example.com'
-            }
-          ]
+          backendAddresses: []
+        }
+      }
+    ]
+    backendHttpSettingsCollection: [
+      {
+        name: 'appGatewayBackendHttpSettings'
+        properties: {
+          port: 80
+          protocol: 'Http'
+          cookieBasedAffinity: 'Disabled'
+          requestTimeout: 20
         }
       }
     ]
@@ -77,5 +84,17 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
         }
       }
     ]
+  }
+}
+
+resource appGatewayPublicIP 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
+  name: 'myPublicIP'
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAddressVersion: 'IPv4'
+    publicIPAllocationMethod: 'Static'
   }
 }
