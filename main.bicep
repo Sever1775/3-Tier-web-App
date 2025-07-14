@@ -31,3 +31,10 @@ module apptierModule 'modules/apptier.bicep' = {
     adminPassword : adminPassword
   }
 }
+
+module loadbalancerModule 'modules/loadbalancer.bicep' = {
+  name: 'deployloadbalancer'
+  params: {
+    location: location
+  }
+}
