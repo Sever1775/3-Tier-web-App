@@ -38,3 +38,11 @@ module loadbalancerModule 'modules/loadbalancer.bicep' = {
     location: location
   }
 }
+
+module bastionModule 'modules/bastion.bicep' = {
+  name: 'deploybastion'
+  params: {
+    location: location
+  }
+}
+
