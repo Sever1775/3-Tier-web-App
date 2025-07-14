@@ -22,3 +22,4 @@ jobs:
         parameters: |
           adminPassword=${{ secrets.ADMIN_PASSWORD }}
           sqlAdminPassword=${{ secrets.SQL_PASS }}
+          
