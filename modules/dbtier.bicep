@@ -13,9 +13,6 @@ param sqlAdminPassword string
 @description('SQL Database name')
 param sqlDatabaseName string = 'appdb'
 
-@description('Enable Azure services to access this server')
-param allowAzureServices bool = true
-
 // SQL Server
 resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: sqlServerName
