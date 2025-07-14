@@ -32,9 +32,6 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
     tier: 'Basic'
     capacity: 5
   }
-  properties: {
-    readScale: 'Disabled'
-  }
 }
 
 
