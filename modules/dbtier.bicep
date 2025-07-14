@@ -52,4 +52,5 @@ resource sqlFirewall 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = 
   }
 }
 
-output dbConnectionString string = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:${sqlServer.name}.database.windows.net,1433;Database=${sqlDatabase.name};Uid=${sqlAdminUsername};Pwd=${sqlAdminPassword};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+output dbServerFqdn string = '${sqlServer.name}.${environment().suffixes.sqlServerHostname}'
+output dbName string = sqlDatabase.name
