@@ -7,7 +7,6 @@ param sqlAdminUsername string = 'sqldbadminuser'
 @secure()
 param sqlAdminPassword string
 
-var dbConnectionString = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:${dbtierModule.outputs.dbServerFqdn},1433;Database=${dbtierModule.outputs.dbName};Uid=${sqlAdminUsername};Pwd=${sqlAdminPassword};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 
 
 module networkModule 'modules/network.bicep' = {
@@ -32,15 +31,6 @@ module webtierModule 'modules/webtier.bicep' = {
   }
 }
 
-module apptierModule 'modules/apptier.bicep' = {
-  name: 'deployapptier'
-  params: {
-    location: location
-    adminPassword : adminPassword
-    dbConnectionString: dbConnectionString
-  }
-}
-
 module loadbalancerModule 'modules/loadbalancer.bicep' = {
   name: 'deployloadbalancer'
   params: {
@@ -53,5 +43,16 @@ module dbtierModule 'modules/dbtier.bicep' = {
   params: {
     location: location
     sqlAdminPassword: sqlAdminPassword
+  }
+}
+
+var dbConnectionString = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:${dbtierModule.outputs.dbServerFqdn},1433;Database=${dbtierModule.outputs.dbName};Uid=${sqlAdminUsername};Pwd=${sqlAdminPassword};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+
+module apptierModule 'modules/apptier.bicep' = {
+  name: 'deployapptier'
+  params: {
+    location: location
+    adminPassword : adminPassword
+    dbConnectionString: dbConnectionString
   }
 }
