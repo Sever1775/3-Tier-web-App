@@ -30,7 +30,7 @@ jobs:
         fi
             
     - name: Deploy ARM Template
-      uses: azure/arm-deploy@v1.0.9
+      uses: azure/arm-deploy@v2
       with:
         resourceGroupName: 3tierwebapp
         template: ./main.bicep # Path to your Bicep file
