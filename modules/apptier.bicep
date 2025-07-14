@@ -7,7 +7,7 @@ param adminPassword string
 
 
 resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
-  name: 'WebTierVMSS'
+  name: 'AppTierVMSS'
   location: location
   sku: {
     name: 'Standard_d2s_v3'
@@ -28,7 +28,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
     }
     virtualMachineProfile: {
       osProfile: {
-        computerNamePrefix: 'webtiervmss'
+        computerNamePrefix: 'apptiervmss'
         adminUsername: adminUsername
         adminPassword: adminPassword
         linuxConfiguration: null
@@ -54,7 +54,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
       networkProfile: {
         networkInterfaceConfigurations: [
           {
-            name: 'webtiervmssNicConfig'
+            name: 'apptiervmssNicConfig'
             properties: {
               primary: true
               enableAcceleratedNetworking: false
@@ -65,11 +65,11 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
               enableIPForwarding: false
               ipConfigurations: [
                 {
-                  name: 'webtiervmssIpConfig'
+                  name: 'apptiervmssIpConfig'
                   properties: {
                     primary: true
                     subnet: {
-                      id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'WebSubnet')
+                      id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'AppSubnet')
                     }
                   }
                 }

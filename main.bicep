@@ -23,3 +23,11 @@ module webtierModule 'modules/webtier.bicep' = {
     adminPassword : adminPassword
   }
 }
+
+module apptierModule 'modules/apptier.bicep' = {
+  name: 'deployapptier'
+  params: {
+    location: location
+    adminPassword : adminPassword
+  }
+}

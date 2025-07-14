@@ -112,7 +112,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
 }
 
 resource appGatewayPublicIP 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
-  name: 'myPublicIP'
+  name: 'AppGWPublicIP'
   location: location
   sku: {
     name: 'Standard'
