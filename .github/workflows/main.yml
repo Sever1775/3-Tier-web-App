@@ -15,26 +15,27 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
 
-    - name: 'Debug: Check Secrets'
-      shell: bash
+    - name: Create Bicep Parameters File
       run: |
-        if [ -n "${{ secrets.SQL_PASS }}" ]; then
-          echo "✅ SQL_PASS secret is available."
-        else
-          echo "❌ SQL_PASS secret is NOT available or is empty."
-        fi
-        if [ -n "${{ secrets.ADMIN_PASSWORD }}" ]; then
-          echo "✅ ADMIN_PASSWORD secret is available."
-        else
-          echo "❌ ADMIN_PASSWORD secret is NOT available or is empty."
-        fi
-            
-    - name: Deploy ARM Template
-      uses: azure/arm-deploy@v2
+        cat > ./main.parameters.json <<EOL
+        {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "adminPassword": {
+              "value": "${{ secrets.ADMIN_PASSWORD }}"
+            },
+            "sqlAdminPassword": {
+              "value": "${{ secrets.SQL_PASS }}"
+            }
+          }
+        }
+        EOL
+
+    - name: Deploy Bicep File
+      uses: azure/arm-deploy@v2 # Make sure this is v2
       with:
         resourceGroupName: 3tierwebapp
-        template: ./main.bicep # Path to your Bicep file
-        parameters: |
-          adminPassword=${{ secrets.ADMIN_PASSWORD }}
-          sqlAdminPassword=${{ secrets.SQL_PASS }}
+        template: ./main.bicep
+        parameters: ./main.parameters.json
           
