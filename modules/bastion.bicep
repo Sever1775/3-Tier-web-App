@@ -9,7 +9,7 @@ resource bastionHost 'Microsoft.Network/bastionHosts@2024-05-01' = {
         name: 'bastionIpConfig'
         properties: {
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'BastionSubnet')
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'AzureBastionSubnet')
           }
           publicIPAddress: {
             id: bastionPublicIP.id

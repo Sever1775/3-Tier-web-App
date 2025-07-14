@@ -17,7 +17,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
         }
       }
       {
-        name: 'BastionSubnet'
+        name: 'AzureBastionSubnet'
         properties: {
           addressPrefix: '10.0.1.0/24'
           networkSecurityGroup: {
