@@ -1,5 +1,5 @@
 @description('Location for all resources')
-param location string = resourceGroup().location
+param location string = 'northeurope'
 
 @description('SQL Server name (must be globally unique)')
 param sqlServerName string = 'mysqlserverforapptier'
