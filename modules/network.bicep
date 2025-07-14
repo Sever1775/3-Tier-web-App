@@ -19,10 +19,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
       {
         name: 'AzureBastionSubnet'
         properties: {
-          addressPrefix: '10.0.1.0/24'
-          networkSecurityGroup: {
-            id: resourceId('Microsoft.Network/networkSecurityGroups', 'bastionNSG')
-          }
+          addressPrefix: '10.0.1.0/26'
         }
       }
       {
@@ -59,27 +56,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   }
 }
 
-resource bastionNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
-  name: 'bastionNSG'
-  location: location
-  properties: {
-    securityRules: [
-      {
-        name: 'AllowBastionInbound'
-        properties: {
-          priority: 100
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '22'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: '*'
-        }
-      }
-    ]
-  }
-}
+
 
 resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
   name: 'appNSG'
