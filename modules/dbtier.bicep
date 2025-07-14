@@ -2,7 +2,7 @@
 param location string = 'northeurope'
 
 @description('SQL Server name (must be globally unique)')
-param sqlServerName string = 'mysqlserverforapptier'
+param sqlServerName string = 'mysqlserverforapptier9514789'
 
 @description('SQL Admin username')
 param sqlAdminUsername string = 'sqldbadminuser'
