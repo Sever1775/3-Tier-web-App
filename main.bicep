@@ -2,6 +2,9 @@ param location string = resourceGroup().location
 @secure()
 param adminPassword string
 
+@secure()
+param sqlAdminPassword string
+
 module networkModule 'modules/network.bicep' = {
   name: 'deploynetworks'
   params: {
@@ -29,6 +32,7 @@ module apptierModule 'modules/apptier.bicep' = {
   params: {
     location: location
     adminPassword : adminPassword
+    dbConnectionString: dbtierModule.outputs.dbConnectionString
   }
 }
 
@@ -39,3 +43,10 @@ module loadbalancerModule 'modules/loadbalancer.bicep' = {
   }
 }
 
+module dbtierModule 'modules/dbtier.bicep' = {
+  name: 'deploydbtier'
+  params: {
+    location: location
+    sqlAdminPassword: sqlAdminPassword
+  }
+}

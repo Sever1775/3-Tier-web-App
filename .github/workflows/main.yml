@@ -21,3 +21,4 @@ jobs:
         template: ./main.bicep # Path to your Bicep file
         parameters: |
           adminPassword=${{ secrets.ADMIN_PASSWORD }}
+          sqlAdminPassword=${{ secrets.SQL_PASS }}
