@@ -41,7 +41,6 @@ module loadbalancerModule 'modules/loadbalancer.bicep' = {
 module dbtierModule 'modules/dbtier.bicep' = {
   name: 'deploydbtier'
   params: {
-    location: location
     sqlAdminPassword: sqlAdminPassword
   }
 }
