@@ -14,6 +14,21 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+
+    - name: 'Debug: Check Secrets'
+      shell: bash
+      run: |
+        if [ -n "${{ secrets.SQL_PASS }}" ]; then
+          echo "✅ SQL_PASS secret is available."
+        else
+          echo "❌ SQL_PASS secret is NOT available or is empty."
+        fi
+        if [ -n "${{ secrets.ADMIN_PASSWORD }}" ]; then
+          echo "✅ ADMIN_PASSWORD secret is available."
+        else
+          echo "❌ ADMIN_PASSWORD secret is NOT available or is empty."
+        fi
+            
     - name: Deploy ARM Template
       uses: azure/arm-deploy@v1.0.9
       with:
