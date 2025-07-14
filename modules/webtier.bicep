@@ -1,6 +1,9 @@
 param location string
 param adminUsername string = 'azureuser'
 
+@description('Private IP of App Tier Load Balancer')
+param appTierPrivateIP string = '10.0.5.10'
+
 
 @secure()
 param adminPassword string
@@ -32,6 +35,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
         adminUsername: adminUsername
         adminPassword: adminPassword
         linuxConfiguration: null
+        customData: base64(replace(loadTextContent('web-cloudinit.sh'), '<APP_TIER_IP>', appTierPrivateIP))
       }
       storageProfile: {
         imageReference: {

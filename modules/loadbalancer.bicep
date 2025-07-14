@@ -12,6 +12,8 @@ resource loadbalancer 'Microsoft.Network/loadBalancers@2024-05-01' = {
       {
         name: 'loadBalancerFrontend'
         properties: {
+          privateIPAddress: '10.0.5.10'
+          privateIPAllocationMethod: 'Static'
           subnet: {
             id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'WebSubnet')
           }
