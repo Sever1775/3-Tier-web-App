@@ -55,3 +55,10 @@ module apptierModule 'modules/apptier.bicep' = {
     dbConnectionString: dbConnectionString
   }
 }
+
+module bastionModule 'modules/bastion.bicep' = {
+  name: 'deploybastion'
+  params: {
+    location: location
+  }
+}
