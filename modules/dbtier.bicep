@@ -40,4 +40,4 @@ output dbServerFqdn string = '${sqlServer.name}.${environment().suffixes.sqlServ
 output dbName string = sqlDatabase.name
 output DB_USER string = sqlAdminUsername
 output DB_NAME string = sqlDatabaseName
-output DB_SERVER string = sqlServer.name
+output DB_SERVER string = '${sqlServer.name}.${environment().suffixes.sqlServerHostname}'
