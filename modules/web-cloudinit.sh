@@ -2,7 +2,6 @@
 
 sudo apt update
 sudo apt install nginx -y
-sudo mv index.html /var/www/html/index.html
 
 # Web Tier HTML file
 cat <<EOF > /home/azureuser/html.index
@@ -95,3 +94,5 @@ cat <<EOF > /home/azureuser/html.index
 </body>
 </html>
 EOF
+
+sudo mv index.html /var/www/html/index.html
