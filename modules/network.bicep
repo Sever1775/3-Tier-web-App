@@ -38,6 +38,9 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
         name: 'AppSubnet'
         properties: {
           addressPrefix: '10.0.4.0/24'
+          natGateway: {
+            id: resourceId('Microsoft.Network/natGateways', 'NatGatewayILB')
+          }
           networkSecurityGroup: {
             id: resourceId('Microsoft.Network/networkSecurityGroups', 'appNSG')
           }

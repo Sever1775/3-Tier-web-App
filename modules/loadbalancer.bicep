@@ -47,4 +47,35 @@ resource loadbalancer 'Microsoft.Network/loadBalancers@2024-05-01' = {
   }
 }
 
+resource natgatewaypip 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
+  name: 'NatGateway-PIP'
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+    publicIPAddressVersion: 'IPv4'
+  }
+}
+
+
+resource natgateway 'Microsoft.Network/natGateways@2024-05-01' = {
+  name: 'NatGatewayILB'
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIpAddresses: [
+      {
+        id: natgatewaypip.id
+      }
+    ]
+    idleTimeoutInMinutes: 4
+  }
+}
+
+
+
 output ilbprivateIP string = loadbalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
