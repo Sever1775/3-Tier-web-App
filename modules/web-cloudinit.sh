@@ -69,7 +69,8 @@ cat <<EOF > /home/azureuser/index.html
                 const response = await fetch(appTierUrl);
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // Throw an error to be caught by the catch block
+                    throw new Error(`Server responded with a status of ${response.status}`);
                 }
 
                 const data = await response.json();
@@ -81,12 +82,9 @@ cat <<EOF > /home/azureuser/index.html
             } catch (error) {
                 // Display any errors
                 console.error('Fetch error:', error);
-                errorMessageSpan.textContent = `Could not connect to the App Tier at ${appTierUrl}. Make sure the URL is correct and the App Tier server is running. Details: ${error.message}`;
+                // CORRECTED LINE: Assign a descriptive error message string
+                errorMessageSpan.textContent = `Failed to fetch data from the App Tier. Please check the browser console (F12) for more details. Error: ${error.message}`;
                 errorDiv.classList.remove('hidden');
-            } finally {
-                // Reset button state
-                getDataBtn.textContent = 'Fetch Data from App Tier';
-                getDataBtn.disabled = false;
             }
         });
     </script>
