@@ -28,6 +28,7 @@ module webtierModule 'modules/webtier.bicep' = {
   params: {
     location: location
     adminPassword : adminPassword
+    ilbPrivateIP: loadbalancerModule.outputs.ilbprivateIP
   }
 }
 

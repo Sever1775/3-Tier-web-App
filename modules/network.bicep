@@ -84,7 +84,7 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           direction: 'Inbound'
           protocol: '*'
           sourcePortRange: '*'
-          destinationPortRange: '5000'
+          destinationPortRange: '3000'
           sourceAddressPrefix: '*'
           destinationAddressPrefix: '*'
         }

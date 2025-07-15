@@ -12,8 +12,7 @@ resource loadbalancer 'Microsoft.Network/loadBalancers@2024-05-01' = {
       {
         name: 'loadBalancerFrontend'
         properties: {
-          privateIPAddress: '10.0.5.10'
-          privateIPAllocationMethod: 'Static'
+          privateIPAllocationMethod: 'Dynamic'
           subnet: {
             id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'WebSubnet')
           }
@@ -38,7 +37,7 @@ resource loadbalancer 'Microsoft.Network/loadBalancers@2024-05-01' = {
           }
           protocol: 'Tcp'
           frontendPort: 80
-          backendPort: 4000
+          backendPort: 3000
           idleTimeoutInMinutes: 4
           enableFloatingIP: false
           disableOutboundSnat: false
@@ -47,3 +46,5 @@ resource loadbalancer 'Microsoft.Network/loadBalancers@2024-05-01' = {
     ]
   }
 }
+
+output ilbprivateIP string = loadbalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress

@@ -1,11 +1,3 @@
-#!/bin/bash
-
-sudo apt update
-sudo apt install nginx -y
-sudo mv index.html /var/www/html/index.html
-
-# Web Tier HTML file
-cat <<EOF > /home/azureuser/html.index
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,4 +86,3 @@ cat <<EOF > /home/azureuser/html.index
 
 </body>
 </html>
-EOF
