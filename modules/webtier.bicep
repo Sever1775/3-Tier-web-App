@@ -36,7 +36,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
         adminUsername: adminUsername
         adminPassword: adminPassword
         linuxConfiguration: null
-        customData: base64(replace(loadTextContent('web-cloudinit.sh'), '<YOUR_INTERNAL_LOAD_BALANCER_IP>', ilbPrivateIP))
+        customData: base64(replace(loadTextContent('web-cloudinit.sh'), '__APP_TIER_IP_PLACEHOLDER__', ilbPrivateIP))
       }
       storageProfile: {
         imageReference: {
