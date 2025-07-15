@@ -8,22 +8,6 @@ param ilbPrivateIP string
 @secure()
 param adminPassword string
 
-var appTierIpPlaceholder = '__APP_TIER_IP_PLACEHOLDER__'
-
-var webVmCloudInit = '''
-#cloud-config
-package_update: true
-package_upgrade: true
-packages:
-  - nginx
-runcmd:
-  # 1. Remove the default Nginx page
-  - rm /var/www/html/index.nginx-debian.html
-  # 2. Create the new index.html file with your content
-  - echo '${loadTextContent('./modules/index.html')}' > /var/www/html/index.html
-  # 3. Use 'sed' to find the placeholder and replace it with the actual ILB IP
-  - sed -i 's/${appTierIpPlaceholder}/${ilbPrivateIp}/g' /var/www/html/index.html
-'''
 
 resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
   name: 'WebTierVMSS'
@@ -51,7 +35,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
         adminUsername: adminUsername
         adminPassword: adminPassword
         linuxConfiguration: null
-        customData: base64(webVmCloudInit)
+        customData: base64(replace(loadTextContent('web-cloudinit.sh'), '<YOUR_INTERNAL_LOAD_BALANCER_IP>', ilbPrivateIP))
       }
       storageProfile: {
         imageReference: {
@@ -106,5 +90,4 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
     overprovision: false
   }
 }
-
 
