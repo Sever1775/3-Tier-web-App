@@ -35,7 +35,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
         adminUsername: adminUsername
         adminPassword: adminPassword
         linuxConfiguration: null
-        customData: base64(replace(loadTextContent('web-cloudinit.sh'), '__APP_TIER_IP_PLACEHOLDER__', ilbPrivateIP))
+        customData: base64(replace(loadTextContent('web-cloudinit.sh'), '<YOUR_INTERNAL_LOAD_BALANCER_IP>', ilbPrivateIP))
       }
       storageProfile: {
         imageReference: {
@@ -75,6 +75,11 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
                     subnet: {
                       id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'myVNet', 'WebSubnet')
                     }
+                    applicationGatewayBackendAddressPools: [
+                      {
+                        id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', 'myAppGateway', 'appGatewayBackendPool')
+                      }
+                    ]
                   }
                 }
               ]

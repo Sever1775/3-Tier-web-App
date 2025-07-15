@@ -28,7 +28,6 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
       {
         name: 'appGatewayFrontendIP'
         properties: {
-          privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
             id: appGatewayPublicIP.id
           }
@@ -47,7 +46,6 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
       {
         name: 'appGatewayBackendPool'
         properties: {
-          backendAddresses: []
         }
       }
     ]

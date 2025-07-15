@@ -4,7 +4,7 @@ sudo apt update
 sudo apt install nginx -y
 
 # Web Tier HTML file
-cat <<EOF > /home/azureuser/html.index
+cat <<EOF > /home/azureuser/index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
