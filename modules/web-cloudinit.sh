@@ -1,10 +1,22 @@
 #!/bin/bash
 
-sudo apt update
-sudo apt install nginx -y
+# --- Log Setup ---
+LOG_FILE="/var/log/web-tier-setup.log"
+exec > >(tee -a ${LOG_FILE})
+exec 2> >(tee -a ${LOG_FILE} >&2)
 
-# Web Tier HTML file
-cat <<EOF > /home/azureuser/index.html
+echo "--- Starting Web Tier setup script at $(date) ---"
+
+# --- System & Nginx Installation ---
+echo "Updating packages and installing Nginx..."
+apt-get update
+apt-get install -y nginx
+
+# --- Create the index.html file ---
+echo "Creating the index.html file..."
+# This cat command creates the entire HTML file.
+# The placeholder __APP_TIER_IP_PLACEHOLDER__ will be replaced by the Bicep customData script.
+cat <<'EOF' > /var/www/html/index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,7 +89,6 @@ cat <<EOF > /home/azureuser/index.html
             } catch (error) {
                 // Display any errors
                 console.error('Fetch error:', error);
-                // **THIS IS THE CORRECTED LINE**
                 errorMessageSpan.textContent = `Failed to fetch data. Please check network connectivity and NSG rules. Details: ${error.message}`;
                 errorDiv.classList.remove('hidden');
             } finally {
@@ -92,4 +103,8 @@ cat <<EOF > /home/azureuser/index.html
 </html>
 EOF
 
-sudo mv /home/azureuser/index.html /var/www/html/index.html
+# --- Restart Nginx ---
+echo "Restarting Nginx to serve the new file..."
+systemctl restart nginx
+
+echo "--- Web Tier setup script finished successfully ---"
