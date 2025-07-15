@@ -43,54 +43,49 @@ cat <<EOF > /home/azureuser/index.html
     </div>
 
     <script>
-    // --- Deployment Instructions ---
-    // 1. Place this HTML file in the web root directory of your Web Tier VMs (e.g., /var/www/html for Nginx on Linux, or C:\inetpub\wwwroot for IIS on Windows).
-    // 2. IMPORTANT: Replace the placeholder 'YOUR_INTERNAL_LOAD_BALANCER_IP' with the actual private IP address of your internal load balancer that sits in front of the App Tier.
-    // 3. The App Tier should be configured to listen on the port specified (e.g., 3000).
+        const getDataBtn = document.getElementById('getDataBtn');
+        const resultDiv = document.getElementById('result');
+        const responsePre = document.getElementById('response');
+        const errorDiv = document.getElementById('error');
+        const errorMessageSpan = document.getElementById('errorMessage');
 
-    const getDataBtn = document.getElementById('getDataBtn');
-    const resultDiv = document.getElementById('result');
-    const responsePre = document.getElementById('response');
-    const errorDiv = document.getElementById('error');
-    const errorMessageSpan = document.getElementById('errorMessage');
+        // This IP address placeholder is replaced by your Bicep script.
+        const appTierUrl = 'http://__APP_TIER_IP_PLACEHOLDER__:3000/api/data';
 
-    // This IP is dynamically inserted by your Bicep script
-    const appTierUrl = 'http://__APP_TIER_IP_PLACEHOLDER__:3000/api/data';
+        getDataBtn.addEventListener('click', async () => {
+            // Show loading state
+            getDataBtn.textContent = 'Fetching...';
+            getDataBtn.disabled = true;
+            resultDiv.classList.add('hidden');
+            errorDiv.classList.add('hidden');
 
-    getDataBtn.addEventListener('click', async () => {
-        // Show loading state
-        getDataBtn.textContent = 'Fetching...';
-        getDataBtn.disabled = true;
-        resultDiv.classList.add('hidden');
-        errorDiv.classList.add('hidden');
+            try {
+                // Fetch data from the app tier
+                const response = await fetch(appTierUrl);
 
-        try {
-            // Fetch data from the app tier
-            const response = await fetch(appTierUrl);
+                if (!response.ok) {
+                    // Throw a more descriptive error to be caught by the catch block
+                    throw new Error(`Server responded with a status of ${response.status}`);
+                }
 
-            if (!response.ok) {
-                // Throw a more descriptive error
-                throw new Error(`Server responded with status: ${response.status}`);
+                const data = await response.json();
+
+                // Display the result
+                responsePre.textContent = JSON.stringify(data, null, 2);
+                resultDiv.classList.remove('hidden');
+
+            } catch (error) {
+                // Display any errors
+                console.error('Fetch error:', error);
+                // **THIS IS THE CORRECTED LINE**
+                errorMessageSpan.textContent = `Failed to fetch data. Please check network connectivity and NSG rules. Details: ${error.message}`;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                // Reset button state
+                getDataBtn.textContent = 'Fetch Data from App Tier';
+                getDataBtn.disabled = false;
             }
-
-            const data = await response.json();
-
-            // Display the result
-            responsePre.textContent = JSON.stringify(data, null, 2);
-            resultDiv.classList.remove('hidden');
-
-        } catch (error) {
-            // Display any errors
-            console.error('Fetch error:', error);
-            // **THIS IS THE CORRECTED LINE**
-            errorMessageSpan.textContent = `Failed to fetch data. Please check network connectivity and NSG rules. Details: ${error.message}`;
-            errorDiv.classList.remove('hidden');
-        } finally {
-            // Reset button state
-            getDataBtn.textContent = 'Fetch Data from App Tier';
-            getDataBtn.disabled = false;
-        }
-    });
+        });
     </script>
 
 </body>
