@@ -33,21 +33,22 @@ npm install pm2 -g
 APP_DIR="/opt/app"
 echo "Creating application directory at ${APP_DIR}..."
 mkdir -p ${APP_DIR}
-cd ${APP_DIR}
 
 echo "Creating app.js file by decoding the source code..."
 # Decode the Base64 encoded source code and write it to app.js
-echo "${APP_SOURCE_CODE}" | base64 --decode > ./app.js
+echo "${APP_SOURCE_CODE}" | base64 --decode > ${APP_DIR}/app.js
 
-echo "Installing npm dependencies (express, mssql, cors)..."
-npm install express mssql cors
-
-# Change ownership of the app directory to the admin user
+# --- Change Ownership and Install Dependencies as the Correct User ---
+echo "Changing ownership of ${APP_DIR} to ${ADMIN_USER}..."
 chown -R ${ADMIN_USER}:${ADMIN_USER} ${APP_DIR}
+
+echo "Installing npm dependencies as user ${ADMIN_USER}..."
+# Run npm install as the admin user to avoid permission issues
+sudo -u ${ADMIN_USER} npm --prefix ${APP_DIR} install express mssql cors
 
 # --- PM2 Configuration ---
 echo "Creating PM2 ecosystem file with environment variables..."
-cat <<EOF > ecosystem.config.js
+cat <<EOF > ${APP_DIR}/ecosystem.config.js
 module.exports = {
   apps : [{
     name: 'app-tier-server',
@@ -62,6 +63,9 @@ module.exports = {
   }]
 };
 EOF
+# Ensure the ecosystem file is also owned by the admin user
+chown ${ADMIN_USER}:${ADMIN_USER} ${APP_DIR}/ecosystem.config.js
+
 
 # --- Start Application as the correct user ---
 echo "Starting application with PM2 as user ${ADMIN_USER}..."
