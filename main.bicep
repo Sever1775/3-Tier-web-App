@@ -12,6 +12,7 @@ module networkModule 'modules/network.bicep' = {
   name: 'deploynetworks'
   params: {
     location: location
+    natGatewayId: loadbalancerModule.outputs.natgatewayId
   }
 }
 

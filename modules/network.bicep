@@ -1,5 +1,7 @@
 param location string
 
+param natGatewayId string
+
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   name: 'myVNet'
   location: location
@@ -39,7 +41,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
         properties: {
           addressPrefix: '10.0.4.0/24'
           natGateway: {
-            id: resourceId('Microsoft.Network/natGateways', 'NatGatewayILB')
+            id: natGatewayId
           }
           networkSecurityGroup: {
             id: resourceId('Microsoft.Network/networkSecurityGroups', 'appNSG')

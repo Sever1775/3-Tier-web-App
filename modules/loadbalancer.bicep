@@ -79,3 +79,4 @@ resource natgateway 'Microsoft.Network/natGateways@2024-05-01' = {
 
 
 output ilbprivateIP string = loadbalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
+output natgatewayId string = natgateway.id
