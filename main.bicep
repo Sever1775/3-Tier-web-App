@@ -2,7 +2,6 @@ param location string = resourceGroup().location
 @secure()
 param adminPassword string
 
-param sqlAdminUsername string = 'sqldbadminuser'
 
 @secure()
 param sqlAdminPassword string
@@ -47,14 +46,16 @@ module dbtierModule 'modules/dbtier.bicep' = {
   }
 }
 
-var dbConnectionString = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:${dbtierModule.outputs.dbServerFqdn},1433;Database=${dbtierModule.outputs.dbName};Uid=${sqlAdminUsername};Pwd=${sqlAdminPassword};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 
 module apptierModule 'modules/apptier.bicep' = {
   name: 'deployapptier'
   params: {
     location: location
     adminPassword : adminPassword
-    dbConnectionString: dbConnectionString
+    DB_USER: dbtierModule.outputs.DB_USER
+    DB_SERVER: dbtierModule.outputs.DB_SERVER
+    DB_NAME: dbtierModule.outputs.DB_NAME
+    DB_PASSWORD: sqlAdminPassword
   }
 }
 

@@ -6,8 +6,13 @@ param adminUsername string = 'azureuser'
 param adminPassword string
 
 @description('Database connection string')
+
+param DB_USER string
 @secure()
-param dbConnectionString string
+param DB_PASSWORD string
+param DB_SERVER string
+param DB_NAME string
+
 
 resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
   name: 'AppTierVMSS'
@@ -35,7 +40,17 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
         adminUsername: adminUsername
         adminPassword: adminPassword
         linuxConfiguration: null
-        customData: base64(replace(loadTextContent('app-cloudinit.sh'), '<REPLACE_WITH_CONN_STRING>', dbConnectionString))
+        customData: base64(
+          replace(
+            replace(
+              replace(
+                replace(
+                  replace(
+                    loadTextContent('../app/setup-app-tier.sh'), '__DB_USER__', DB_USER),
+                    '__DB_PASSWORD__', DB_PASSWORD),
+                    '__DB_SERVER__', DB_SERVER),
+                    '__DB_DATABASE__', DB_NAME),
+                    '__APP_SOURCE_CODE__', base64(loadTextContent('../app/app.js'))))
       }
       storageProfile: {
         imageReference: {

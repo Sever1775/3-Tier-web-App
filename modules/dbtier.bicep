@@ -38,3 +38,6 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
 
 output dbServerFqdn string = '${sqlServer.name}.${environment().suffixes.sqlServerHostname}'
 output dbName string = sqlDatabase.name
+output DB_USER string = sqlAdminUsername
+output DB_NAME string = sqlDatabaseName
+output DB_SERVER string = sqlServer.name
