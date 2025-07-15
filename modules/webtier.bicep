@@ -95,4 +95,3 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
     overprovision: false
   }
 }
-
