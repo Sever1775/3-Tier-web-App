@@ -13,6 +13,8 @@ param sqlAdminPassword string
 @description('SQL Database name')
 param sqlDatabaseName string = 'appdb'
 
+param natGatewaypip object
+
 // SQL Server
 resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: sqlServerName
@@ -20,6 +22,15 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   properties: {
     administratorLogin: sqlAdminUsername
     administratorLoginPassword: sqlAdminPassword  }
+}
+
+resource sqlFirewallRule 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
+  parent: sqlServer
+  name: 'AllowAllAzureIPs'
+  properties: {
+    startIpAddress: natGatewaypip.properties.ipAddress
+    endIpAddress: natGatewaypip.properties.ipAddress
+  }
 }
 
 // SQL Database

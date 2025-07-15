@@ -44,6 +44,9 @@ module dbtierModule 'modules/dbtier.bicep' = {
   name: 'deploydbtier'
   params: {
     sqlAdminPassword: sqlAdminPassword
+    natGatewaypip: {
+      id: loadbalancerModule.outputs.natgatewaypip
+    }
   }
 }
 
