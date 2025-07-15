@@ -95,4 +95,4 @@ cat <<EOF > /home/azureuser/index.html
 </html>
 EOF
 
-sudo mv index.html /var/www/html/index.html
+sudo mv /home/azureuser/index.html /var/www/html/index.html
