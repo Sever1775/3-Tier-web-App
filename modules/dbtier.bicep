@@ -16,7 +16,7 @@ param sqlDatabaseName string = 'appdb'
 param natGatewaypip object
 
 // SQL Server
-resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
+resource sqlServer 'Microsoft.Sql/servers@2024-05-01-preview' = {
   name: sqlServerName
   location: location
   properties: {
@@ -35,7 +35,7 @@ resource sqlFirewallRule 'Microsoft.Sql/servers/firewallRules@2024-05-01-preview
 }
 
 // SQL Database
-resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
+resource sqlDatabase 'Microsoft.Sql/servers/databases@2024-05-01-preview' = {
   parent: sqlServer
   name: sqlDatabaseName
   location: location
