@@ -10,6 +10,7 @@ DB_PASSWORD="__DB_PASSWORD__"
 DB_SERVER="__DB_SERVER__"
 DB_DATABASE="__DB_DATABASE__"
 APP_SOURCE_CODE="__APP_SOURCE_CODE__"
+ADMIN_USER="__ADMIN_USER__" # Placeholder for the admin username
 
 # --- Log Setup ---
 LOG_FILE="/var/log/setup-app-tier.log"
@@ -20,7 +21,8 @@ echo "--- Starting App Tier setup on VMSS instance at $(date) ---"
 
 # --- System & Node.js Installation ---
 echo "Updating packages and installing Node.js, npm..."
-apt-get update
+# Add a retry loop to handle transient network issues
+for i in {1..5}; do apt-get update && break || sleep 15; done
 apt-get install -y nodejs npm
 
 # --- PM2 Installation ---
@@ -40,6 +42,9 @@ echo "${APP_SOURCE_CODE}" | base64 --decode > ./app.js
 echo "Installing npm dependencies (express, mssql, cors)..."
 npm install express mssql cors
 
+# Change ownership of the app directory to the admin user
+chown -R ${ADMIN_USER}:${ADMIN_USER} ${APP_DIR}
+
 # --- PM2 Configuration ---
 echo "Creating PM2 ecosystem file with environment variables..."
 cat <<EOF > ecosystem.config.js
@@ -58,13 +63,18 @@ module.exports = {
 };
 EOF
 
-# --- Start Application ---
-echo "Starting application with PM2..."
-pm2 start ecosystem.config.js
+# --- Start Application as the correct user ---
+echo "Starting application with PM2 as user ${ADMIN_USER}..."
+sudo -u ${ADMIN_USER} pm2 start ${APP_DIR}/ecosystem.config.js
 
-echo "Configuring PM2 to start on system boot..."
-# The 'env' command is needed to ensure PM2 finds the right user home directory
-env PATH=$PATH:/usr/bin pm2 startup systemd -u ${SUDO_USER:-root} --hp /home/${SUDO_USER:-root}
-pm2 save
+# Generate the startup script configuration for the admin user
+echo "Configuring PM2 to start on system boot for user ${ADMIN_USER}..."
+# Get the startup command from pm2
+STARTUP_COMMAND=$(sudo -u ${ADMIN_USER} pm2 startup | tail -n 1)
+# Execute the generated command as root
+eval "${STARTUP_COMMAND}"
+
+# Save the process list for the admin user
+sudo -u ${ADMIN_USER} pm2 save
 
 echo "--- App Tier setup script finished successfully at $(date) ---"

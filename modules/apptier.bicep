@@ -46,11 +46,13 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
               replace(
                 replace(
                   replace(
-                    loadTextContent('../app/setup-app-tier.sh'), '__DB_USER__', DB_USER),
-                    '__DB_PASSWORD__', DB_PASSWORD),
-                    '__DB_SERVER__', DB_SERVER),
-                    '__DB_DATABASE__', DB_NAME),
-                    '__APP_SOURCE_CODE__', base64(loadTextContent('../app/app.js'))))
+                    replace(
+                      loadTextContent('../app/setup-app-tier.sh'), '__DB_USER__', DB_USER),
+                      '__DB_PASSWORD__', DB_PASSWORD),
+                      '__DB_SERVER__', DB_SERVER),
+                      '__DB_DATABASE__', DB_NAME),
+                      '__ADMIN_USER__', adminUsername),
+                      '__APP_SOURCE_CODE__', base64(loadTextContent('../app/app.js'))))
       }
       storageProfile: {
         imageReference: {
