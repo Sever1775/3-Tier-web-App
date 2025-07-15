@@ -121,4 +121,4 @@ resource appGatewayPublicIP 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
   }
 }
 
-
+output backendAddressPoolId string = appGateway.properties.backendAddressPools[0].id

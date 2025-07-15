@@ -4,6 +4,7 @@ param adminUsername string = 'azureuser'
 @description('Private IP of App Tier Load Balancer')
 param ilbPrivateIP string
 
+param backendAddressPoolId string
 
 @secure()
 param adminPassword string
@@ -77,7 +78,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
                     }
                     applicationGatewayBackendAddressPools: [
                       {
-                        id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', 'myAppGateway', 'appGatewayBackendPool')
+                        id: backendAddressPoolId
                       }
                     ]
                   }

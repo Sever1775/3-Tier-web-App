@@ -29,6 +29,7 @@ module webtierModule 'modules/webtier.bicep' = {
     location: location
     adminPassword : adminPassword
     ilbPrivateIP: loadbalancerModule.outputs.ilbprivateIP
+    backendAddressPoolId: appgwModule.outputs.backendAddressPoolId
   }
 }
 
