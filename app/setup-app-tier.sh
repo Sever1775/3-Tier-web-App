@@ -29,6 +29,9 @@ apt-get install -y nodejs npm
 echo "Installing PM2 process manager globally..."
 npm install pm2 -g
 
+# Find the path to the node executable
+NODE_PATH=$(which node)
+
 # --- Application Setup ---
 APP_DIR="/opt/app"
 echo "Creating application directory at ${APP_DIR}..."
@@ -52,7 +55,8 @@ cat <<EOF > ${APP_DIR}/ecosystem.config.js
 module.exports = {
   apps : [{
     name: 'app-tier-server',
-    script: '${APP_DIR}/app.js', // Use an absolute path for the script
+    script: '${APP_DIR}/app.js',
+    interpreter: '${NODE_PATH}', // Explicitly set the interpreter path
     env: {
       NODE_ENV: 'production',
       DB_USER: '${DB_USER}',
