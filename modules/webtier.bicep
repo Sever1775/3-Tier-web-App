@@ -4,6 +4,7 @@ param adminUsername string = 'azureuser'
 @description('Private IP of App Tier Load Balancer')
 param ilbPrivateIP string
 
+@description('Backend Address Pool ID for Application Gateway')
 param backendAddressPoolId string
 
 @secure()
