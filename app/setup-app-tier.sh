@@ -43,8 +43,8 @@ echo "Changing ownership of ${APP_DIR} to ${ADMIN_USER}..."
 chown -R ${ADMIN_USER}:${ADMIN_USER} ${APP_DIR}
 
 echo "Installing npm dependencies as user ${ADMIN_USER}..."
-# Run npm install as the admin user to avoid permission issues
-sudo -u ${ADMIN_USER} npm --prefix ${APP_DIR} install express mssql cors
+# Run npm install within the app directory as the correct user
+sudo -u ${ADMIN_USER} bash -c "cd ${APP_DIR} && npm install express mssql cors"
 
 # --- PM2 Configuration ---
 echo "Creating PM2 ecosystem file with environment variables..."
