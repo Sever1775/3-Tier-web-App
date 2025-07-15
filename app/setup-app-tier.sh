@@ -52,7 +52,7 @@ cat <<EOF > ${APP_DIR}/ecosystem.config.js
 module.exports = {
   apps : [{
     name: 'app-tier-server',
-    script: 'app.js',
+    script: '${APP_DIR}/app.js', // Use an absolute path for the script
     env: {
       NODE_ENV: 'production',
       DB_USER: '${DB_USER}',
