@@ -62,48 +62,21 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
 }
 
 
-
 resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
   name: 'appNSG'
   location: location
   properties: {
     securityRules: [
       {
-        name: 'Allowport80Inbound'
+        name: 'Allowport3000Inbound'
         properties: {
           priority: 100
           access: 'Allow'
           direction: 'Inbound'
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '80'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: '*'
-        }
-      }
-      {
-        name: 'Allowport3000Inbound'
-        properties: {
-          priority: 110
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: '*'
+          protocol: 'TCP'
           sourcePortRange: '*'
           destinationPortRange: '3000'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: '*'
-        }
-      }
-      {
-        name: 'Allowport4000Inbound'
-        properties: {
-          priority: 120
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '4000'
-          sourceAddressPrefix: '*'
+          sourceAddressPrefix: virtualNetwork.properties.addressSpace.addressPrefixes[5]
           destinationAddressPrefix: '*'
         }
       }
@@ -125,19 +98,6 @@ resource webNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           protocol: '*'
           sourcePortRange: '*'
           destinationPortRange: '80'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: '*'
-        }
-      }
-      {
-        name: 'Allowport22Inbound'
-        properties: {
-          priority: 110
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '22'
           sourceAddressPrefix: '*'
           destinationAddressPrefix: '*'
         }
