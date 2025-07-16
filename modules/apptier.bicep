@@ -16,7 +16,7 @@ param DB_NAME string
 @description('VMSS SKU properties for AppTier VMs')
 param VMSSSKUName string = 'Standard_D2s_v3'
 param VMSSskuTier string = 'Standard'
-param VMSSInstanceCount int = 2
+param VMSSInstanceCount int = 1
 
 
 

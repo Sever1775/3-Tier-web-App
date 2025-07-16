@@ -10,14 +10,18 @@ param backendAddressPoolId string
 @secure()
 param adminPassword string
 
+@description('VMSS SKU properties for AppTier VMs')
+param VMSSSKUName string = 'Standard_D2s_v3'
+param VMSSskuTier string = 'Standard'
+param VMSSInstanceCount int = 1
 
 resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
   name: 'WebTierVMSS'
   location: location
   sku: {
-    name: 'Standard_d2s_v3'
-    tier: 'Standard'
-    capacity: 1
+    name: VMSSSKUName
+    tier: VMSSskuTier
+    capacity: VMSSInstanceCount
   }
   properties: {
     singlePlacementGroup: false
