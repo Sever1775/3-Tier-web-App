@@ -76,7 +76,7 @@ resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
           protocol: 'TCP'
           sourcePortRange: '*'
           destinationPortRange: '3000'
-          sourceAddressPrefix: virtualNetwork.properties.addressSpace.addressPrefixes[5]
+          sourceAddressPrefix: virtualNetwork.properties.subnets[5].properties.addressPrefix
           destinationAddressPrefix: '*'
         }
       }
