@@ -47,9 +47,6 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2024-05-01-preview' = {
   }
 }
 
-
-
-output dbName string = sqlDatabase.name
 output DB_USER string = sqlAdminUsername
 output DB_NAME string = sqlDatabaseName
 output DB_SERVER string = reference(sqlServer.id, '2021-11-01').fullyQualifiedDomainName
