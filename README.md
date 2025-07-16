@@ -2,17 +2,15 @@
 
 This repository contains the infrastructure-as-code (IaC) and application code to deploy a classic 3-tier web application on Microsoft Azure using Bicep and GitHub Actions.
 
-The application demonstrates a secure, scalable, and automated setup with a Web Tier, an Application Tier, and a Database Tier (Azure SQL).
+The application demonstrates a secure, scalable, and automated setup with a Web Tier, an Application Tier, and a Database Tier (Azure SQL). This configuration is designed to verify the internal network connectivity and security rules between the tiers.
 
 ## Architecture Overview
 
 The infrastructure is designed to be secure and scalable, with clear separation of concerns between the different layers of the application.
 
 1.  **Web Tier**:
-    * Consists of a Virtual Machine Scale Set (VMSS) running a Node.js server with Nginx as a reverse proxy.
-    * Acts as a server-side proxy, receiving requests from users' browsers.
-    * Serves the static frontend content (HTML, CSS, JavaScript).
-    * Forwards dynamic data requests to the private App Tier.
+    * Consists of a Virtual Machine Scale Set (VMSS) running an **Nginx** web server.
+    * Serves a single, static `index.html` page.
     * This tier is the only layer accessible from the public internet, via an Azure Application Gateway.
 
 2.  **Application Tier**:
@@ -23,19 +21,16 @@ The infrastructure is designed to be secure and scalable, with clear separation 
 
 3.  **Database Tier**:
     * An Azure SQL Database instance holds the application's data.
-    * It is placed in a private subnet (or configured with firewall rules) to ensure it is only accessible from the Application Tier.
+    * It is configured with firewall rules to ensure it is only accessible from the Application Tier.
 
-### Request Flow
+### Request Flow & Verification
 
 1.  A user accesses the public URL, which points to the **Azure Application Gateway**.
 2.  The Application Gateway forwards the HTTP request to a VM in the **Web Tier VMSS**.
 3.  Nginx on the Web Tier VM serves the `index.html` page.
-4.  The user clicks the "Fetch Data" button, which triggers a JavaScript `fetch` call to a local API endpoint on the Web Tier (e.g., `/api/data`).
-5.  The Node.js proxy server on the Web Tier receives this request.
-6.  The Web Tier server makes a new, internal request to the **Internal Load Balancer's** private IP address.
-7.  The ILB forwards the request to a healthy VM in the **App Tier VMSS**.
-8.  The Node.js server on the App Tier receives the request, connects to the **Azure SQL Database**, and runs a query.
-9.  The data is returned through the chain: DB Tier -> App Tier -> Web Tier -> User's Browser.
+4.  The JavaScript in the user's browser attempts to make a `fetch` call directly to the **Internal Load Balancer's private IP address**.
+5.  **This call is expected to fail.** A public browser cannot connect to a private IP address inside a secure virtual network.
+6.  The definitive test is performed by connecting to the Web Tier VM and using `curl` to simulate the request, proving the internal network path is correctly configured.
 
 ---
 
@@ -54,40 +49,33 @@ The infrastructure is designed to be secure and scalable, with clear separation 
 
 ## Repository Structure
 
-```md
 ├── .github/
 │   └── workflows/
 │       └── deploy-azure.yml    # GitHub Actions workflow for deployment
 ├── app/
 │   ├── app.js                  # Node.js code for the App Tier
-│   └── setup-app-tier.sh       # Setup script for App Tier VMs
-│       
+│   └── scripts/
+│       └── setup-app-tier.sh   # Setup script for App Tier VMs
 ├── web/
-│   └── web-cloudinit.sh    # Setup script for Web Tier VMs
-│   
+│   ├── index.html              # Frontend HTML file
+│   └── scripts/
+│       └── web-cloudinit.sh    # Setup script for Web Tier VMs
 ├── modules/
-│   ├── appgw.bicep           # Bicep module for Application Gateway
-│   ├── apptier.bicep           # Bicep module for App Tier VMs
-│   ├── bastion.bicep           # Bicep module for Bastion host 
-│   ├── dbtier.bicep           # Bicep module for Database Tier resources
-│   ├── loadbalancer.bicep           # Bicep module for Internal Load Balancer
-│   ├── network.bicep           # Bicep module for Network(VNET,Subnet) resources   
-│   └── webtier.bicep    # Setup script for Web Tier VMs
+│   ├── webtier.bicep           # Bicep module for Web Tier resources
+│   └── apptier.bicep           # Bicep module for App Tier resources
 └── main.bicep                  # Main Bicep file to deploy all resources
-```
 
 ---
 
 ## Deployment
 
 This project is deployed automatically using GitHub Actions. A push to the `main` branch will trigger the `deploy-azure.yml` workflow, which performs the following steps:
-
 1.  Logs in to Azure using the provided service principal.
 2.  Executes the `main.bicep` file, which deploys or updates all Azure resources.
 3.  The Bicep deployment uses `customData` to pass startup scripts to the VMSS instances, which handle:
-    * Installing Nginx, Node.js, and PM2.
+    * Installing Nginx (Web Tier) or Node.js/PM2 (App Tier).
     * Copying the application code.
-    * Installing `npm` dependencies.
+    * Installing `npm` dependencies (App Tier).
     * Configuring and starting the services.
 
 ---
@@ -105,29 +93,21 @@ After a successful deployment, you can verify that each component is working cor
     pm2 status
     ```
     You should see `app-tier-server` with a status of `online`.
-4.  Check the application logs:
-    ```bash
-    pm2 logs app-tier-server
-    ```
-    You should see the message "Waiting for requests from the Web Tier...".
 
-### 2. Check the Web Tier
+### 2. Check the Web Tier & End-to-End Connectivity (Definitive Test)
 
-1.  SSH into one of the VM instances in the `webTierVmss`.
-2.  Check the status of the proxy server:
-    ```bash
-    pm2 status
-    ```
-    You should see `web-tier-proxy` with a status of `online`.
-3.  Test the connection from the Web Tier to the App Tier. Replace `10.0.X.X` with your Internal Load Balancer's private IP.
+This is the most important test. It confirms that the Web Tier, App Tier, and DB Tier are all communicating correctly.
+
+1.  SSH into one of the VM instances in the **`webTierVmss`**.
+2.  Test the connection from the Web Tier to the App Tier. Replace `10.0.X.X` with your Internal Load Balancer's private IP.
     ```bash
     curl [http://10.0.](http://10.0.)X.X:3000/api/data
     ```
-    This command should return a JSON object with data from the database, confirming all three tiers are connected.
+3.  **A successful test will return a JSON object** with the current time and database name. This proves your 3-tier application is fully functional.
 
-### 3. Test in the Browser
+### 3. Test in the Browser (Expected to Fail)
 
 1.  Find the public IP address of your Application Gateway.
 2.  Open a web browser and navigate to that IP address.
 3.  The web page should load. Click the **"Fetch Data"** button.
-4.  The "Response from App Tier" section should appear and be populated with the JSON data from the database.
+4.  Open the browser's developer console (F12). You should see a "Failed to fetch" or "Connection timed out" error. This is the **correct and expected behavior** for this secure architecture, as your browser cannot access the private network.
