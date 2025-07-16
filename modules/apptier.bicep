@@ -1,11 +1,11 @@
+@description('location for AppTier resources')
 param location string
-param adminUsername string = 'azureuser'
 
+@description('Admin username for AppTier VMs')
+param adminUsername string = 'azureuser'
 
 @secure()
 param adminPassword string
-
-@description('Database connection string')
 
 param DB_USER string
 @secure()
@@ -13,14 +13,22 @@ param DB_PASSWORD string
 param DB_SERVER string
 param DB_NAME string
 
+@description('VMSS SKU properties for AppTier VMs')
+param VMSSSKUName string = 'Standard_D2s_v3'
+param VMSSskuTier string = 'Standard'
+param VMSSInstanceCount int = 2
+
+
+
+var appTierVMSSName = 'AppTierVMSS'
 
 resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
-  name: 'AppTierVMSS'
+  name: appTierVMSSName
   location: location
   sku: {
-    name: 'Standard_d2s_v3'
-    tier: 'Standard'
-    capacity: 1
+    name: VMSSSKUName
+    tier: VMSSskuTier
+    capacity: VMSSInstanceCount
   }
   properties: {
     singlePlacementGroup: false

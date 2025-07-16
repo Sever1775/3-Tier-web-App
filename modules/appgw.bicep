@@ -1,14 +1,25 @@
+@description('Location for AppGW resources')
 param location string 
 
+
+@description('SKU parameters for the Application Gateway')
+param skutier string = 'Standard_v2'
+param skufamily string = 'Generation_1'
+param skucapacity int = 2
+
+var appGatewayName = 'myAppGateway'
+
+var appGatewayPublicIPName = 'AppGWPublicIP'
+
 resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
-  name: 'myAppGateway'
+  name: appGatewayName
   location: location
     properties: {
      sku: {
-      name: 'Standard_v2'
-      tier: 'Standard_v2'
-      family: 'Generation_1'
-      capacity: 2 
+      name: skutier
+      tier: skutier
+      family: skufamily
+      capacity: skucapacity
     }
     gatewayIPConfigurations: [
       {
@@ -110,7 +121,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
 }
 
 resource appGatewayPublicIP 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
-  name: 'AppGWPublicIP'
+  name: appGatewayPublicIPName
   location: location
   sku: {
     name: 'Standard'
