@@ -43,9 +43,6 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
           natGateway: {
             id: natGatewayId
           }
-          networkSecurityGroup: {
-            id: resourceId('Microsoft.Network/networkSecurityGroups', 'appNSG')
-          }
         }
       }
       {
@@ -61,28 +58,6 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   }
 }
 
-
-resource appNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
-  name: 'appNSG'
-  location: location
-  properties: {
-    securityRules: [
-      {
-        name: 'Allowport3000Inbound'
-        properties: {
-          priority: 100
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: 'TCP'
-          sourcePortRange: '*'
-          destinationPortRange: '3000'
-          sourceAddressPrefix: virtualNetwork.properties.subnets[5].properties.addressPrefix
-          destinationAddressPrefix: '*'
-        }
-      }
-    ]
-  }
-}
 
 resource webNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
   name: 'webNSG'
