@@ -1,7 +1,17 @@
+@description('Location for Load Balancer resources')
 param location string
 
+@description('Name of the Internal Load Balancer')
+param loadBalancerName string = 'InternalLoadBalancer'
+
+@description('Name of the NAT Gateway')
+param natgatewayname string = 'NatGatewayILB'
+
+@description('Name of the Public IP for NAT Gateway')
+param natgatewaypublicIPName string = 'NatGateway-PIP'
+
 resource loadbalancer 'Microsoft.Network/loadBalancers@2024-05-01' = {
-  name: 'InternalLoadBalancer'
+  name: loadBalancerName
   location: location
   sku: {
     name: 'Standard'
@@ -48,7 +58,7 @@ resource loadbalancer 'Microsoft.Network/loadBalancers@2024-05-01' = {
 }
 
 resource natgatewaypip 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
-  name: 'NatGateway-PIP'
+  name: natgatewaypublicIPName
   location: location
   sku: {
     name: 'Standard'
@@ -61,7 +71,7 @@ resource natgatewaypip 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
 
 
 resource natgateway 'Microsoft.Network/natGateways@2024-05-01' = {
-  name: 'NatGatewayILB'
+  name: natgatewayname
   location: location
   sku: {
     name: 'Standard'

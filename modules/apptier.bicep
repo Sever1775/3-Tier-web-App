@@ -18,9 +18,8 @@ param VMSSSKUName string = 'Standard_D2s_v3'
 param VMSSskuTier string = 'Standard'
 param VMSSInstanceCount int = 1
 
-
-
-var appTierVMSSName = 'AppTierVMSS'
+@description('Name of the AppTier VMSS')
+param appTierVMSSName string = 'AppTierVMSS'
 
 resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2024-03-01' = {
   name: appTierVMSSName

@@ -1,9 +1,17 @@
+@description('Location for Network resources')
 param location string
 
+@description('natGatewayId for the App Subnet')
 param natGatewayId string
 
+@description('Name of the Virtual Network')
+param vnetName string = 'myVNet'
+
+@description('Name of the Network Security Group for the Web Subnet')
+param webSubnetNSGName string = 'webNSG'
+
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
-  name: 'myVNet'
+  name: vnetName
   location: location
   properties: {
     addressSpace: {
@@ -12,12 +20,6 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
       ]
     }
     subnets: [
-      {
-        name: 'Default'
-        properties: {
-          addressPrefix: '10.0.0.0/24'
-        }
-      }
       {
         name: 'AzureBastionSubnet'
         properties: {
@@ -60,7 +62,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' = {
 
 
 resource webNSG 'Microsoft.Network/networkSecurityGroups@2024-07-01' = {
-  name: 'webNSG'
+  name: webSubnetNSGName
   location: location
   properties: {
     securityRules: [

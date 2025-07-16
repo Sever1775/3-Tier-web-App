@@ -1,4 +1,7 @@
+@description('Location for web tier resources')
 param location string
+
+@description('Admin username for Web Tier VMs')
 param adminUsername string = 'azureuser'
 
 @description('Private IP of App Tier Load Balancer')

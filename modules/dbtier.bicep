@@ -1,4 +1,4 @@
-@description('Location for all resources')
+@description('Location for Database resources')
 param location string = 'northeurope'
 
 @description('SQL Server name (must be globally unique)')

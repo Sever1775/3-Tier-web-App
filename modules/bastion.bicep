@@ -1,7 +1,14 @@
+@description('Location for Bastion Host')
 param location string
 
+@description('Bastion Host Name')
+param bastionHostName string = 'myBastionHost'
+
+@description('Bastion Public IP Name')
+param bastionPublicIPName string = 'BastionPublicIP'
+
 resource bastionHost 'Microsoft.Network/bastionHosts@2024-05-01' = {
-  name: 'myBastionHost'
+  name: bastionHostName
   location: location
   properties: {
     ipConfigurations: [
@@ -21,7 +28,7 @@ resource bastionHost 'Microsoft.Network/bastionHosts@2024-05-01' = {
 }
 
 resource bastionPublicIP 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
-  name: 'BastionPublicIP'
+  name: bastionPublicIPName
   location: location
   sku: {
     name: 'Standard'
