@@ -49,21 +49,27 @@ The infrastructure is designed to be secure and scalable, with clear separation 
 
 ## Repository Structure
 
+```md
 ├── .github/
 │   └── workflows/
 │       └── deploy-azure.yml    # GitHub Actions workflow for deployment
 ├── app/
 │   ├── app.js                  # Node.js code for the App Tier
-│   └── scripts/
-│       └── setup-app-tier.sh   # Setup script for App Tier VMs
+│   └── setup-app-tier.sh       # Setup script for App Tier VMs
+│       
 ├── web/
-│   ├── index.html              # Frontend HTML file
-│   └── scripts/
-│       └── web-cloudinit.sh    # Setup script for Web Tier VMs
+│   └── web-cloudinit.sh    # Setup script for Web Tier VMs
+│   
 ├── modules/
-│   ├── webtier.bicep           # Bicep module for Web Tier resources
-│   └── apptier.bicep           # Bicep module for App Tier resources
+│   ├── appgw.bicep           # Bicep module for Application Gateway
+│   ├── apptier.bicep           # Bicep module for App Tier VMs
+│   ├── bastion.bicep           # Bicep module for Bastion host 
+│   ├── dbtier.bicep           # Bicep module for Database Tier resources
+│   ├── loadbalancer.bicep           # Bicep module for Internal Load Balancer
+│   ├── network.bicep           # Bicep module for Network(VNET,Subnet) resources   
+│   └── webtier.bicep    # Setup script for Web Tier VMs
 └── main.bicep                  # Main Bicep file to deploy all resources
+```
 
 ---
 
